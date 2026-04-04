@@ -79,8 +79,8 @@ cd /opt
 if [ ! -d signoz ]; then
   git clone --depth=1 -b main https://github.com/SigNoz/signoz.git
 fi
-cd signoz/deploy
-docker compose up -d 2>&1 | tail -3
+cd signoz/deploy/docker
+docker compose up -d 2>&1 | tail -5
 echo "  Waiting 45s for startup..."
 sleep 45
 
