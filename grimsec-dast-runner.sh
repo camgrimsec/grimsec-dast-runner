@@ -53,8 +53,14 @@ echo "[2/6] Starting Windmill..."
 mkdir -p /opt/windmill && cd /opt/windmill
 if [ ! -f docker-compose.yml ]; then
   curl -sL https://raw.githubusercontent.com/windmill-labs/windmill/main/docker-compose.yml -o docker-compose.yml
+  curl -sL https://raw.githubusercontent.com/windmill-labs/windmill/main/.env -o .env
 fi
-docker compose up -d 2>&1 | tail -3
+# Ensure .env exists with WM_IMAGE
+if [ ! -f .env ] || ! grep -q WM_IMAGE .env; then
+  echo 'WM_IMAGE=ghcr.io/windmill-labs/windmill:main' >> .env
+  echo 'DATABASE_URL=postgres://postgres:changeme@db/windmill?sslmode=disable' >> .env
+fi
+docker compose up -d 2>&1 | tail -5
 echo "  Waiting 30s for startup..."
 sleep 30
 
